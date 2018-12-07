@@ -1,0 +1,79 @@
+name: liveforspeed
+version: 'S3-6T'
+summary: Live for Speed (LFS) is a online racing simulator
+description: |
+ Live for Speed is a serious racing simulator. No arcade modes, no steering aids - YOU have to do the driving.
+
+ The forces affecting the car's motion are simulated individually at each wheel. We recommend the use of a steering wheel, because although you can use the keyboard and/or mouse, a wheel and pedals provide a lot more accuracy. The force feedback sent to the steering wheel is calculated directly from the forces, with no canned effects. This allows you to feel what is happening at the contact patch between your tyres and the road, helping you to get closer to the limit without exceeding it too much!
+
+ When you have a lot of speed and you approach a corner, you must brake well in advance or you will end up somewhere you don't want to be! You need to find the best way through any sequence of bends by going through them many times. There's always more to learn.
+
+grade: stable
+confinement: strict
+architectures:
+  - build-on: amd64
+    run-on: [amd64, i386]
+icon: snap/gui/LFS.png
+
+plugs:
+  wine-platform-plug:
+    content: wine-base-devel
+    interface: content
+    target: $SNAP/wine-platform
+    default-provider: wine-platform
+
+apps:
+  liveforspeed:
+    command: bin/sommelier "$WINEPREFIX/drive_c/LFS/LFS.exe"
+    environment:
+      WINEPREFIX: "$SNAP_USER_COMMON/.wine"
+      DLLOVERRIDES: "mscoree,mshtml=;winemenubuilder.exe=d" # Prevent pop-ups about Wine Mono & Gecko
+      INSTALL_URL: "https://www.lfs.net/download/LFS_S3_6T_setup.exe"
+      LC_ALL: "C.UTF-8"
+    plugs:
+      - wine-platform-plug
+      - desktop
+      - desktop-legacy
+      - hardware-observe
+      - home
+      - joystick
+      - network
+      - network-bind
+      - opengl
+      - process-control
+      - pulseaudio
+      - wayland
+      - x11
+  wineboot:
+    command: bin/sommelier $SNAP/wine-platform/wine-stable/bin/wineboot
+    environment:
+      WINEPREFIX: "$SNAP_USER_COMMON/.wine"
+      DLLOVERRIDES: "mscoree,mshtml=;winemenubuilder.exe=d" # Prevent pop-ups about Wine Mono & Gecko
+    plugs:
+      - desktop
+      - desktop-legacy
+      - pulseaudio
+      - wayland
+      - x11
+  winecfg:
+    command: bin/sommelier $SNAP/wine-platform/wine-stable/bin/winecfg
+    environment:
+      WINEPREFIX: "$SNAP_USER_COMMON/.wine"
+      DLLOVERRIDES: "mscoree,mshtml=;winemenubuilder.exe=d" # Prevent pop-ups about Wine Mono & Gecko
+    plugs:
+      - desktop
+      - desktop-legacy
+      - pulseaudio
+      - wayland
+      - x11
+
+parts:
+  liveforspeed:
+    plugin: dump
+    source: scripts
+    override-build: |
+      snapcraftctl build
+      set -ex
+      mkdir -p $SNAPCRAFT_PART_INSTALL/wine-platform
+    organize:
+      'sommelier': bin/

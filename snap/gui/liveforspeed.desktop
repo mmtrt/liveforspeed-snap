@@ -1,0 +1,11 @@
+[Desktop Entry]
+Type=Application
+Encoding=UTF-8
+Name=Live For Speed
+Exec=liveforspeed
+Icon=${SNAP}/meta/gui/LFS.png
+Categories=Game;
+Terminal=false
+StartupNotify=true
+StartupWMClass=LFS.exe
+Keywords=game
