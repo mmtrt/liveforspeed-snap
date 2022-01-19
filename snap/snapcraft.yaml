@@ -69,16 +69,6 @@ apps:
       - network
 
 parts:
-  liveforspeed:
-    plugin: nil
-    source: ./snap/local/src
-    override-build: |
-      snapcraftctl build
-      set -ex
-      mkdir -p sommelier/hooks ; cp -R -p sommelier $SNAPCRAFT_PART_INSTALL
-    stage:
-      - sommelier
-
   # The sommelier script helps you snap Windows applications using Wine. It
   # initializes and configures Wine and installs the Windows application.
   sommelier:
